@@ -188,8 +188,8 @@ export const ReportsPage: React.FC = () => {
               </table>
 
               <div className="mt-4 p-2.5 bg-slate-50 border border-slate-200 rounded text-[11px] text-slate-500">
-                This preview is generated live from current prototype data. A production version of BidSure
-                AI would render this as a formatted, exportable document.
+                This preview is generated live from current prototype data. A production version of CSAP
+                would render this as a formatted, exportable document.
               </div>
             </div>
           </div>

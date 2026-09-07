@@ -466,10 +466,10 @@ export const mockBids: Bid[] = [
     },
     auditTrail: [
       { id: 'AUD-01', timestamp: '05 Sep 2026 10:12 AM', actor: 'ABC Industrial Solutions', actorRole: 'Bidder', actionType: 'BIDDER_SUBMISSION', summary: 'Bid package and 11 documents submitted', details: 'Packet uploaded via GeM portal, reference 8fbc4...291a' },
-      { id: 'AUD-02', timestamp: '05 Sep 2026 10:13 AM', actor: 'BidSure AI Engine', actorRole: 'Automated Service', actionType: 'DOCUMENT_OCR', summary: 'AI document verification & OCR completed', details: 'All 11 PDF documents processed with 99.4% OCR confidence score.' },
-      { id: 'AUD-03', timestamp: '05 Sep 2026 10:14 AM', actor: 'BidSure AI Engine', actorRole: 'Automated Service', actionType: 'SYSTEM_AI', summary: 'GST portal verification matched', details: 'GSTIN 33AABCA1234F1Z8 status ACTIVE on GSTN API.' },
-      { id: 'AUD-04', timestamp: '05 Sep 2026 10:14 AM', actor: 'BidSure AI Engine', actorRole: 'Automated Service', actionType: 'SYSTEM_AI', summary: 'EMD verification completed', details: 'Transaction TXN458921 confirmed with SBI Core Banking.' },
-      { id: 'AUD-05', timestamp: '05 Sep 2026 10:15 AM', actor: 'BidSure AI Engine', actorRole: 'Automated Service', actionType: 'SYSTEM_AI', summary: 'OEM discrepancy detected', details: 'Flagged 35-day deficit in OEM authorization letter validity.' },
+      { id: 'AUD-02', timestamp: '05 Sep 2026 10:13 AM', actor: 'CSAP Verification Engine', actorRole: 'Automated Service', actionType: 'DOCUMENT_OCR', summary: 'AI document verification & OCR completed', details: 'All 11 PDF documents processed with 99.4% OCR confidence score.' },
+      { id: 'AUD-03', timestamp: '05 Sep 2026 10:14 AM', actor: 'CSAP Verification Engine', actorRole: 'Automated Service', actionType: 'SYSTEM_AI', summary: 'GST portal verification matched', details: 'GSTIN 33AABCA1234F1Z8 status ACTIVE on GSTN API.' },
+      { id: 'AUD-04', timestamp: '05 Sep 2026 10:14 AM', actor: 'CSAP Verification Engine', actorRole: 'Automated Service', actionType: 'SYSTEM_AI', summary: 'EMD verification completed', details: 'Transaction TXN458921 confirmed with SBI Core Banking.' },
+      { id: 'AUD-05', timestamp: '05 Sep 2026 10:15 AM', actor: 'CSAP Verification Engine', actorRole: 'Automated Service', actionType: 'SYSTEM_AI', summary: 'OEM discrepancy detected', details: 'Flagged 35-day deficit in OEM authorization letter validity.' },
     ],
   },
 
@@ -744,9 +744,9 @@ export const mockBids: Bid[] = [
     },
     auditTrail: [
       { id: 'AUD-21', timestamp: '05 Sep 2026 02:45 PM', actor: 'Bharat Engineering Works', actorRole: 'Bidder', actionType: 'BIDDER_SUBMISSION', summary: 'Bid package with 12 documents submitted', details: 'Uploaded via GeM portal with Bank Guarantee details.' },
-      { id: 'AUD-22', timestamp: '05 Sep 2026 02:47 PM', actor: 'BidSure AI Engine', actorRole: 'Automated Service', actionType: 'DOCUMENT_OCR', summary: 'OCR extraction completed for all 12 files', details: 'All documents processed with 98.7% OCR confidence.' },
-      { id: 'AUD-23', timestamp: '05 Sep 2026 02:48 PM', actor: 'BidSure AI Engine', actorRole: 'Automated Service', actionType: 'SYSTEM_AI', summary: 'Canara Bank SFMS Bank Guarantee confirmed', details: 'SFMS code 760COV confirmed ₹2,00,000 BG valid until 15 Mar 2027.' },
-      { id: 'AUD-24', timestamp: '05 Sep 2026 02:50 PM', actor: 'BidSure AI Engine', actorRole: 'Automated Service', actionType: 'SYSTEM_AI', summary: 'Turnover scrutiny flagged FY24 borderline value', details: 'FY24 turnover is ₹4.90 Cr; 3-year average ₹5.016 Cr qualifies.' },
+      { id: 'AUD-22', timestamp: '05 Sep 2026 02:47 PM', actor: 'CSAP Verification Engine', actorRole: 'Automated Service', actionType: 'DOCUMENT_OCR', summary: 'OCR extraction completed for all 12 files', details: 'All documents processed with 98.7% OCR confidence.' },
+      { id: 'AUD-23', timestamp: '05 Sep 2026 02:48 PM', actor: 'CSAP Verification Engine', actorRole: 'Automated Service', actionType: 'SYSTEM_AI', summary: 'Canara Bank SFMS Bank Guarantee confirmed', details: 'SFMS code 760COV confirmed ₹2,00,000 BG valid until 15 Mar 2027.' },
+      { id: 'AUD-24', timestamp: '05 Sep 2026 02:50 PM', actor: 'CSAP Verification Engine', actorRole: 'Automated Service', actionType: 'SYSTEM_AI', summary: 'Turnover scrutiny flagged FY24 borderline value', details: 'FY24 turnover is ₹4.90 Cr; 3-year average ₹5.016 Cr qualifies.' },
     ],
   },
 
@@ -1024,10 +1024,10 @@ export const mockBids: Bid[] = [
     },
     auditTrail: [
       { id: 'AUD-31', timestamp: '04 Sep 2026 11:30 AM', actor: 'National Safety Systems', actorRole: 'Bidder', actionType: 'BIDDER_SUBMISSION', summary: 'Bid package with 10 documents submitted', details: 'Uploaded with partial EMD payment challan TXN881294.' },
-      { id: 'AUD-32', timestamp: '04 Sep 2026 11:32 AM', actor: 'BidSure AI Engine', actorRole: 'Automated Service', actionType: 'DOCUMENT_OCR', summary: 'OCR extraction completed', details: '10 files processed. 2 required documents missing from packet.' },
-      { id: 'AUD-33', timestamp: '04 Sep 2026 11:35 AM', actor: 'BidSure AI Engine', actorRole: 'Automated Service', actionType: 'SYSTEM_AI', summary: 'EMD shortfall of ₹50,000 detected', details: 'Paid ₹1,50,000 vs required ₹2,00,000. Flagged as non-responsive.' },
-      { id: 'AUD-34', timestamp: '04 Sep 2026 11:36 AM', actor: 'BidSure AI Engine', actorRole: 'Automated Service', actionType: 'SYSTEM_AI', summary: 'Turnover sub-benchmark detected', details: '3-year average of ₹3.46 Cr fails ₹5.00 Cr threshold.' },
-      { id: 'AUD-35', timestamp: '04 Sep 2026 11:38 AM', actor: 'BidSure AI Engine', actorRole: 'Automated Service', actionType: 'SYSTEM_AI', summary: 'Make in India deficit flagged', details: 'Local content declared at 48% (fails 50% Class-I benchmark).' },
+      { id: 'AUD-32', timestamp: '04 Sep 2026 11:32 AM', actor: 'CSAP Verification Engine', actorRole: 'Automated Service', actionType: 'DOCUMENT_OCR', summary: 'OCR extraction completed', details: '10 files processed. 2 required documents missing from packet.' },
+      { id: 'AUD-33', timestamp: '04 Sep 2026 11:35 AM', actor: 'CSAP Verification Engine', actorRole: 'Automated Service', actionType: 'SYSTEM_AI', summary: 'EMD shortfall of ₹50,000 detected', details: 'Paid ₹1,50,000 vs required ₹2,00,000. Flagged as non-responsive.' },
+      { id: 'AUD-34', timestamp: '04 Sep 2026 11:36 AM', actor: 'CSAP Verification Engine', actorRole: 'Automated Service', actionType: 'SYSTEM_AI', summary: 'Turnover sub-benchmark detected', details: '3-year average of ₹3.46 Cr fails ₹5.00 Cr threshold.' },
+      { id: 'AUD-35', timestamp: '04 Sep 2026 11:38 AM', actor: 'CSAP Verification Engine', actorRole: 'Automated Service', actionType: 'SYSTEM_AI', summary: 'Make in India deficit flagged', details: 'Local content declared at 48% (fails 50% Class-I benchmark).' },
     ],
   },
 
@@ -1291,10 +1291,10 @@ export const mockBids: Bid[] = [
     },
     auditTrail: [
       { id: 'AUD-41', timestamp: '03 Sep 2026 04:15 PM', actor: 'Prime Tech Solutions', actorRole: 'Bidder', actionType: 'BIDDER_SUBMISSION', summary: 'Bid package with 12 documents submitted', details: 'Uploaded with MSME exemption claim UDYAM-TN-02-0089142.' },
-      { id: 'AUD-42', timestamp: '03 Sep 2026 04:18 PM', actor: 'BidSure AI Engine', actorRole: 'Automated Service', actionType: 'DOCUMENT_OCR', summary: 'OCR extraction completed for all 12 files', details: 'All documents verified with 99.6% OCR confidence score.' },
-      { id: 'AUD-43', timestamp: '03 Sep 2026 04:20 PM', actor: 'BidSure AI Engine', actorRole: 'Automated Service', actionType: 'SYSTEM_AI', summary: 'MSME EMD exemption confirmed', details: 'Matched with Ministry of MSME portal. EMD waived per Public Procurement Policy 2012.' },
-      { id: 'AUD-44', timestamp: '03 Sep 2026 04:22 PM', actor: 'BidSure AI Engine', actorRole: 'Automated Service', actionType: 'SYSTEM_AI', summary: 'Technical and financial credentials cleared', details: 'Annual turnover ₹8.40 Cr exceeds benchmark; 85% local content verified.' },
-      { id: 'AUD-45', timestamp: '03 Sep 2026 04:25 PM', actor: 'BidSure AI Engine', actorRole: 'Automated Service', actionType: 'SYSTEM_AI', summary: 'Evaluation completed: Recommended Accept', details: 'AI recommendation generated: Recommend Accept for commercial stage.' },
+      { id: 'AUD-42', timestamp: '03 Sep 2026 04:18 PM', actor: 'CSAP Verification Engine', actorRole: 'Automated Service', actionType: 'DOCUMENT_OCR', summary: 'OCR extraction completed for all 12 files', details: 'All documents verified with 99.6% OCR confidence score.' },
+      { id: 'AUD-43', timestamp: '03 Sep 2026 04:20 PM', actor: 'CSAP Verification Engine', actorRole: 'Automated Service', actionType: 'SYSTEM_AI', summary: 'MSME EMD exemption confirmed', details: 'Matched with Ministry of MSME portal. EMD waived per Public Procurement Policy 2012.' },
+      { id: 'AUD-44', timestamp: '03 Sep 2026 04:22 PM', actor: 'CSAP Verification Engine', actorRole: 'Automated Service', actionType: 'SYSTEM_AI', summary: 'Technical and financial credentials cleared', details: 'Annual turnover ₹8.40 Cr exceeds benchmark; 85% local content verified.' },
+      { id: 'AUD-45', timestamp: '03 Sep 2026 04:25 PM', actor: 'CSAP Verification Engine', actorRole: 'Automated Service', actionType: 'SYSTEM_AI', summary: 'Evaluation completed: Recommended Accept', details: 'AI recommendation generated: Recommend Accept for commercial stage.' },
     ],
   },
 ];

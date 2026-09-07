@@ -18,7 +18,11 @@ import { NotFoundPage } from './pages/common/NotFoundPage';
 
 /** Blocks the authenticated shell from rendering at all when logged out. */
 const RequireAuth: React.FC<{ children: React.ReactElement }> = ({ children }) => {
-  const { isAuthenticated } = useProcurement();
+  const { isAuthenticated, authChecked } = useProcurement();
+  // Wait for the initial Supabase session check before deciding to redirect —
+  // otherwise a hard reload of a deep link (e.g. /reviews) races the async
+  // check, bounces to /login, and loses the original destination.
+  if (!authChecked) return null;
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
@@ -27,7 +31,8 @@ const RequireAuth: React.FC<{ children: React.ReactElement }> = ({ children }) =
 
 /** Keeps an already-authenticated officer from being sent back to the login screen. */
 const RedirectIfAuthenticated: React.FC<{ children: React.ReactElement }> = ({ children }) => {
-  const { isAuthenticated } = useProcurement();
+  const { isAuthenticated, authChecked } = useProcurement();
+  if (!authChecked) return null;
   if (isAuthenticated) {
     return <Navigate to="/dashboard" replace />;
   }

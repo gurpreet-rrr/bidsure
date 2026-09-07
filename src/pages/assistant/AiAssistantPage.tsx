@@ -18,7 +18,7 @@ export const AiAssistantPage: React.FC = () => {
     {
       id: 'MSG-1',
       sender: 'assistant',
-      text: 'Good day, Officer Ramanathan. I am your BidSure AI Procurement Assistant. I can answer inquiries regarding tender eligibility benchmarks, bidder discrepancy findings, EMD reconciliation data, and clause-level compliance scores based on your active tender case (GEM/2026/CPCL/001). How may I assist your scrutiny today?',
+      text: 'Good day, Officer Ramanathan. I am your CSAP Procurement Assistant. I can answer inquiries regarding tender eligibility benchmarks, bidder discrepancy findings, EMD reconciliation data, and clause-level compliance scores based on your active tender case (GEM/2026/CPCL/001). How may I assist your scrutiny today?',
       timestamp: '10:00 AM',
     },
   ]);
@@ -85,7 +85,7 @@ export const AiAssistantPage: React.FC = () => {
               <Bot className="w-5 h-5" />
             </div>
             <div>
-              <h1 className="text-base font-bold text-slate-900">BidSure AI Procurement Assistant</h1>
+              <h1 className="text-base font-bold text-slate-900">CSAP Procurement Assistant</h1>
               <span className="text-[11px] text-indigo-700 font-semibold uppercase tracking-wider">
                 Advisory Decision Support Copilot
               </span>
@@ -142,7 +142,7 @@ export const AiAssistantPage: React.FC = () => {
             >
               <div className="flex items-center justify-between gap-4 mb-1 text-[10px] opacity-80">
                 <span className="font-bold uppercase tracking-wider">
-                  {msg.sender === 'user' ? 'Procurement Officer' : 'BidSure AI Copilot'}
+                  {msg.sender === 'user' ? 'Procurement Officer' : 'CSAP Copilot'}
                 </span>
                 <span>{msg.timestamp}</span>
               </div>

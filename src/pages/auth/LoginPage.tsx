@@ -1,53 +1,39 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Shield, Lock, ArrowRight, Eye, EyeOff, AlertCircle, Loader2 } from 'lucide-react';
-import { useProcurement } from '../../context/ProcurementContext';
-
-const DEMO_OFFICER_ID = 'CPCL-PROC-0841';
-const DEMO_PASSWORD = 'Cpcl@2026';
+import { supabase } from '../../lib/supabaseClient';
 
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
-  const { login } = useProcurement();
 
-  const [officerId, setOfficerId] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
-    const trimmedId = officerId.trim();
-    if (!trimmedId || !password) {
-      setError('Employee Code and password are both required.');
+    if (!email.trim() || !password) {
+      setError('Email and password are both required.');
       return;
     }
 
     setIsSubmitting(true);
+    const { error: authError } = await supabase.auth.signInWithPassword({
+      email: email.trim(),
+      password,
+    });
+    setIsSubmitting(false);
 
-    // Simulated authentication latency for a believable prototype login flow.
-    window.setTimeout(() => {
-      const isValid =
-        trimmedId.toLowerCase() === DEMO_OFFICER_ID.toLowerCase() && password === DEMO_PASSWORD;
+    if (authError) {
+      setError(authError.message);
+      return;
+    }
 
-      if (!isValid) {
-        setError('Invalid Employee Code or password. Use the demo credentials shown below.');
-        setIsSubmitting(false);
-        return;
-      }
-
-      login();
-      navigate('/dashboard', { replace: true });
-    }, 450);
-  };
-
-  const fillDemoCredentials = () => {
-    setOfficerId(DEMO_OFFICER_ID);
-    setPassword(DEMO_PASSWORD);
-    setError('');
+    navigate('/dashboard', { replace: true });
   };
 
   return (
@@ -61,11 +47,9 @@ export const LoginPage: React.FC = () => {
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-md bg-blue-600 text-white shadow-md mb-3">
             <Shield className="w-8 h-8" />
           </div>
-          <h1 className="text-2xl font-black tracking-wider uppercase text-white">
-            BidSure AI
-          </h1>
+          <h1 className="text-2xl font-black tracking-wider uppercase text-white">CSAP</h1>
           <p className="text-xs text-blue-300 font-medium tracking-wide mt-1">
-            AI-Assisted Procurement Bid Verification Platform
+            Central Statutory Authentication Platform
           </p>
           <div className="mt-2 text-[11px] text-slate-400 font-mono">
             CHENNAI PETROLEUM CORPORATION LIMITED (CPCL)
@@ -92,15 +76,15 @@ export const LoginPage: React.FC = () => {
 
           <form onSubmit={handleSubmit} className="space-y-4" noValidate>
             <div>
-              <label htmlFor="officerId" className="block text-xs font-medium text-slate-300 mb-1">
-                Officer Employee Code / GeM ID
+              <label htmlFor="email" className="block text-xs font-medium text-slate-300 mb-1">
+                Officer Email
               </label>
               <input
-                id="officerId"
-                type="text"
-                value={officerId}
-                onChange={(e) => setOfficerId(e.target.value)}
-                placeholder="e.g. CPCL-PROC-0841"
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="officer@cpcl.co.in"
                 autoComplete="username"
                 className="w-full px-3 py-2 text-sm bg-slate-900/90 border border-slate-600 rounded text-white font-mono placeholder:text-slate-600 focus:border-blue-500 focus:outline-hidden"
               />
@@ -132,26 +116,6 @@ export const LoginPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="bg-slate-900/60 p-3 rounded border border-slate-800 text-[11px] text-slate-300">
-              <div className="flex items-center justify-between">
-                <span className="font-semibold text-slate-200">Demo Credentials</span>
-                <button
-                  type="button"
-                  onClick={fillDemoCredentials}
-                  className="text-blue-400 hover:text-blue-300 font-semibold underline underline-offset-2"
-                >
-                  Autofill
-                </button>
-              </div>
-              <div className="mt-1.5 font-mono text-slate-300">
-                <div>Employee Code: {DEMO_OFFICER_ID}</div>
-                <div>Password: {DEMO_PASSWORD}</div>
-              </div>
-              <div className="text-slate-500 mt-1">
-                Signs in as R. K. Ramanathan, Chief Procurement Officer — Manali Refinery Commercial Division.
-              </div>
-            </div>
-
             <button
               type="submit"
               disabled={isSubmitting}
@@ -174,7 +138,7 @@ export const LoginPage: React.FC = () => {
           <div className="mt-4 pt-3 border-t border-slate-800 text-center flex items-center justify-center gap-1.5">
             <Lock className="w-3 h-3 text-slate-500 shrink-0" />
             <p className="text-[10px] text-slate-400 leading-normal">
-              Prototype environment for authorized CPCL procurement reviewers. BidSure AI is an advisory
+              Prototype environment for authorized CPCL procurement reviewers. CSAP is an advisory
               decision-support tool — it does not connect to any live government system in this demo.
             </p>
           </div>

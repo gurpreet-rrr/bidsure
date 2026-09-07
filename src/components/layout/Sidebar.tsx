@@ -55,7 +55,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
           </div>
           <div className="flex flex-col">
             <span className="font-bold text-base tracking-wider text-white uppercase">
-              BidSure AI
+              CSAP
             </span>
             <span className="text-[10px] text-slate-400 font-medium tracking-wide">
               CPCL Procurement Portal

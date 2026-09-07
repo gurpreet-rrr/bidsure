@@ -1,5 +1,5 @@
 {
-  "name": "bidsure-ai",
+  "name": "csap",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.115.0",
     "clsx": "^2.1.1",
     "lucide-react": "^1.41.0",
     "react": "^19.2.8",
@@ -25,6 +26,7 @@
     "@vitejs/plugin-react": "^6.1.0",
     "oxlint": "^1.79.0",
     "tailwindcss": "^4.3.3",
+    "tsx": "^4.23.13",
     "typescript": "~6.0.2",
     "vite": "^8.2.2"
   }

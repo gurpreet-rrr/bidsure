@@ -9,6 +9,7 @@ import { AiAdvisoryBanner } from '../../components/ui/AiAdvisoryBanner';
 export const MyReviewsPage: React.FC = () => {
   const navigate = useNavigate();
   const { bids, selectBid, metrics } = useProcurement();
+  const pendingBids = bids.filter((b) => !b.officerDecision);
 
   const handleReview = (bidId: string) => {
     selectBid(bidId);
@@ -35,7 +36,7 @@ export const MyReviewsPage: React.FC = () => {
 
       <div className="bg-white border border-slate-200 rounded-md shadow-2xs overflow-hidden">
         <div className="divide-y divide-slate-200">
-          {bids.map((bidder) => (
+          {pendingBids.map((bidder) => (
             <div
               key={bidder.id}
               onClick={() => handleReview(bidder.id)}

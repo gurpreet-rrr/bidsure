@@ -17,13 +17,41 @@ import { MetricCard } from '../../components/ui/MetricCard';
 import { StatusBadge } from '../../components/ui/StatusBadge';
 import { RiskBadge } from '../../components/ui/RiskBadge';
 import { AiAdvisoryBanner } from '../../components/ui/AiAdvisoryBanner';
-import { toTenderSlug } from '../../types';
+import { toTenderSlug, type Bid } from '../../types';
 import { getActiveAlerts } from '../../utils/alerts';
+
+function emdBadge(bid: Bid): { label: string; className: string } {
+  const emd = bid.emd;
+  if (!emd) return { label: 'Pending', className: 'bg-slate-100 text-slate-600 border-slate-200' };
+  if (emd.verificationResult === 'EXEMPTION_CONFIRMED') {
+    return { label: 'Exempted', className: 'bg-blue-50 text-blue-700 border-blue-200' };
+  }
+  if (emd.verificationResult === 'EMD_AMOUNT_MISMATCH' || emd.verificationResult === 'INVALID_INSTRUMENT') {
+    return { label: 'Mismatch', className: 'bg-rose-100 text-rose-800 border-rose-300' };
+  }
+  if (emd.instrumentType === 'BANK_GUARANTEE') {
+    return { label: `${emd.submittedAmountFormatted} BG`, className: 'bg-emerald-50 text-emerald-700 border-emerald-200' };
+  }
+  return { label: `${emd.submittedAmountFormatted} Paid`, className: 'bg-emerald-50 text-emerald-700 border-emerald-200' };
+}
+
+function emdSubtext(bid: Bid): string {
+  const emd = bid.emd;
+  if (!emd) return 'Verification pending';
+  if (emd.verificationResult === 'EXEMPTION_CONFIRMED') return 'MSME Exemption • Udyam Confirmed';
+  if (emd.verificationResult === 'EMD_AMOUNT_MISMATCH') {
+    const shortfall = emd.requiredAmount - emd.submittedAmount;
+    return `₹${shortfall.toLocaleString('en-IN')} Shortfall in ${emd.instrumentType.replace(/_/g, '/')}`;
+  }
+  if (emd.instrumentType === 'BANK_GUARANTEE') return `Bank Guarantee • ${emd.bankName} SFMS Verified`;
+  return `Online ${emd.instrumentType.replace(/_/g, '/')} Payment • ${emd.bankName} Reconciled`;
+}
 
 export const DashboardPage: React.FC = () => {
   const navigate = useNavigate();
   const { metrics, tenders, bids, selectTender, selectBid } = useProcurement();
   const alerts = getActiveAlerts(bids).slice(0, 3);
+  const pendingBids = bids.filter((b) => !b.officerDecision);
 
   const handleSelectTender = (tenderId: string) => {
     selectTender(tenderId);
@@ -197,7 +225,7 @@ export const DashboardPage: React.FC = () => {
           </div>
 
           <div className="space-y-2">
-            {bids.map((bidder) => (
+            {pendingBids.map((bidder) => (
               <div
                 key={bidder.id}
                 onClick={() => handleSelectBidder(bidder.id, bidder.tenderId)}
@@ -308,57 +336,33 @@ export const DashboardPage: React.FC = () => {
           </div>
 
           <div className="space-y-2 text-xs">
-            <div
-              onClick={() => handleSelectBidder('BID-004', 'GEM/2026/CPCL/001', 'emd')}
-              className="p-2.5 rounded border border-slate-200 bg-slate-50 hover:bg-blue-50/50 hover:border-blue-300 transition-colors cursor-pointer flex items-center justify-between"
-            >
-              <div>
-                <div className="font-semibold text-slate-800">Prime Tech Solutions (BID-004)</div>
-                <div className="text-[11px] text-slate-500">MSME Exemption • Udyam Confirmed</div>
-              </div>
-              <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-blue-50 text-blue-700 border border-blue-200">
-                Exempted
-              </span>
-            </div>
-
-            <div
-              onClick={() => handleSelectBidder('BID-002', 'GEM/2026/CPCL/001', 'emd')}
-              className="p-2.5 rounded border border-slate-200 bg-slate-50 hover:bg-emerald-50/50 hover:border-emerald-300 transition-colors cursor-pointer flex items-center justify-between"
-            >
-              <div>
-                <div className="font-semibold text-slate-800">Bharat Engineering Works (BID-002)</div>
-                <div className="text-[11px] text-slate-500">Bank Guarantee • Canara Bank SFMS Verified</div>
-              </div>
-              <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                ₹2,00,000 BG
-              </span>
-            </div>
-
-            <div
-              onClick={() => handleSelectBidder('BID-003', 'GEM/2026/CPCL/001', 'emd')}
-              className="p-2.5 rounded border border-rose-200 bg-rose-50/40 hover:bg-rose-100/50 transition-colors cursor-pointer flex items-center justify-between"
-            >
-              <div>
-                <div className="font-semibold text-rose-900">National Safety Systems (BID-003)</div>
-                <div className="text-[11px] text-rose-700">₹50,000 Shortfall in NEFT</div>
-              </div>
-              <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-rose-100 text-rose-800 border border-rose-300">
-                Mismatch
-              </span>
-            </div>
-
-            <div
-              onClick={() => handleSelectBidder('BID-001', 'GEM/2026/CPCL/001', 'emd')}
-              className="p-2.5 rounded border border-slate-200 bg-slate-50 hover:bg-emerald-50/50 hover:border-emerald-300 transition-colors cursor-pointer flex items-center justify-between"
-            >
-              <div>
-                <div className="font-semibold text-slate-800">ABC Industrial Solutions (BID-001)</div>
-                <div className="text-[11px] text-slate-500">Online NEFT Payment • SBI Reconciled</div>
-              </div>
-              <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                ₹2,00,000 Paid
-              </span>
-            </div>
+            {bids.slice(0, 4).map((bidder) => {
+              const badge = emdBadge(bidder);
+              const isMismatch = bidder.emd?.verificationResult === 'EMD_AMOUNT_MISMATCH';
+              return (
+                <div
+                  key={bidder.id}
+                  onClick={() => handleSelectBidder(bidder.id, bidder.tenderId, 'emd')}
+                  className={`p-2.5 rounded border transition-colors cursor-pointer flex items-center justify-between ${
+                    isMismatch
+                      ? 'border-rose-200 bg-rose-50/40 hover:bg-rose-100/50'
+                      : 'border-slate-200 bg-slate-50 hover:bg-emerald-50/50 hover:border-emerald-300'
+                  }`}
+                >
+                  <div>
+                    <div className={`font-semibold ${isMismatch ? 'text-rose-900' : 'text-slate-800'}`}>
+                      {bidder.companyName} ({bidder.id})
+                    </div>
+                    <div className={`text-[11px] ${isMismatch ? 'text-rose-700' : 'text-slate-500'}`}>
+                      {emdSubtext(bidder)}
+                    </div>
+                  </div>
+                  <span className={`px-2 py-0.5 rounded text-[11px] font-semibold border ${badge.className}`}>
+                    {badge.label}
+                  </span>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>

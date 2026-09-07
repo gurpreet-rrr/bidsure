@@ -1,4 +1,4 @@
-# BidSure AI
+# CSAP — Central Statutory Authentication Platform
 
 AI-assisted procurement bid verification prototype, built around a fictional CPCL (Chennai
 Petroleum Corporation Limited) tender scenario. A procurement officer reviews bids against

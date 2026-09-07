@@ -1,4 +1,4 @@
-// TypeScript schemas for BidSure AI
+// TypeScript schemas for CSAP (Central Statutory Authentication Platform)
 
 export type RiskLevel = 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
 export type VerificationStatus = 'VERIFIED' | 'MANUAL_REVIEW' | 'MISMATCH' | 'PENDING' | 'EXEMPTED';
