@@ -7,7 +7,6 @@ import {
   CheckSquare,
   AlertTriangle,
   BarChart3,
-  Bot,
   History,
   Settings,
   Shield,
@@ -113,20 +112,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
             </NavLink>
           </div>
 
-          {/* Analytics & Copilot */}
+          {/* Analytics */}
           <div className="space-y-1">
             <NavLink to="/reports" className={navItemClass} onClick={() => setIsOpen(false)}>
               <BarChart3 className="w-4 h-4 text-slate-400" />
               <span>Reports</span>
-            </NavLink>
-            <NavLink to="/assistant" className={navItemClass} onClick={() => setIsOpen(false)}>
-              <Bot className="w-4 h-4 text-slate-400" />
-              <div className="flex items-center justify-between w-full">
-                <span>AI Assistant</span>
-                <span className="text-[10px] bg-indigo-500/30 text-indigo-200 border border-indigo-400/30 px-1 rounded">
-                  Advisory
-                </span>
-              </div>
             </NavLink>
           </div>
 

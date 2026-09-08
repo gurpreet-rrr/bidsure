@@ -11,7 +11,6 @@ import { BidderWorkspacePage } from './pages/bidders/BidderWorkspacePage';
 import { MyReviewsPage } from './pages/work/MyReviewsPage';
 import { AlertsPage } from './pages/work/AlertsPage';
 import { ReportsPage } from './pages/reports/ReportsPage';
-import { AiAssistantPage } from './pages/assistant/AiAssistantPage';
 import { AuditTrailPage } from './pages/audit/AuditTrailPage';
 import { SettingsPage } from './pages/settings/SettingsPage';
 import { NotFoundPage } from './pages/common/NotFoundPage';
@@ -86,9 +85,8 @@ export const App: React.FC = () => {
             <Route path="reviews" element={<MyReviewsPage />} />
             <Route path="alerts" element={<AlertsPage />} />
 
-            {/* Reporting, Advisory Assistant, Audit, Settings */}
+            {/* Reporting, Audit, Settings */}
             <Route path="reports" element={<ReportsPage />} />
-            <Route path="assistant" element={<AiAssistantPage />} />
             <Route path="audit" element={<AuditTrailPage />} />
             <Route path="settings" element={<SettingsPage />} />
 

@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { Sidebar } from './Sidebar';
 import { TopHeader } from './TopHeader';
+import { FloatingAssistant } from '../assistant/FloatingAssistant';
 import { useProcurement } from '../../context/ProcurementContext';
 
 export const AppLayout: React.FC = () => {
@@ -29,6 +30,8 @@ export const AppLayout: React.FC = () => {
           )}
         </main>
       </div>
+
+      {dataLoaded && <FloatingAssistant />}
     </div>
   );
 };
