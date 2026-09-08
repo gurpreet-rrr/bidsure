@@ -149,7 +149,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
         {/* Footer info */}
         <div className="p-3 border-t border-slate-800 bg-[#07192C]/80 text-xs">
           <div className="flex items-center justify-between text-slate-400">
-            <span className="font-mono text-[11px]">v1.0.4-PROTOTYPE</span>
+            <span className="font-mono text-[11px]">v1.0.4</span>
             <span className="text-emerald-400 flex items-center gap-1 font-medium text-[11px]">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
               CPCL Portal

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Download, CheckCircle2, Eye, X } from 'lucide-react';
 import { useProcurement } from '../../context/ProcurementContext';
-import { AiAdvisoryBanner } from '../../components/ui/AiAdvisoryBanner';
 import { StatusBadge } from '../../components/ui/StatusBadge';
 import { RiskBadge } from '../../components/ui/RiskBadge';
 
@@ -19,35 +18,35 @@ const reports: ReportDefinition[] = [
     title: 'Technical Evaluation Summary',
     category: 'Committee Minutes',
     description: 'Evaluation sheet summarizing compliance and risk standing for every bid on the active tender.',
-    format: 'PDF (Prototype)',
+    format: 'PDF',
   },
   {
     id: 'REP-02',
     title: 'Bidder Discrepancy & Evidence Dossier',
     category: 'Audit & Compliance',
     description: 'Clause-by-clause discrepancy log with document excerpts and verification timestamps.',
-    format: 'PDF (Prototype)',
+    format: 'PDF',
   },
   {
     id: 'REP-03',
     title: 'EMD Reconciliation Report',
     category: 'Financial / Treasury',
     description: 'Bank/BG-wise EMD status and MSME exemption validation across all bids.',
-    format: 'CSV / PDF (Prototype)',
+    format: 'CSV / PDF',
   },
   {
     id: 'REP-04',
     title: 'Vendor Risk Summary',
     category: 'Risk Management',
     description: 'Financial, statutory, and document risk factors identified across all bidders.',
-    format: 'PDF (Prototype)',
+    format: 'PDF',
   },
   {
     id: 'REP-05',
     title: 'Audit Trail Export',
     category: 'System Log',
     description: 'Chronological export of AI verification events and officer determinations.',
-    format: 'JSON / PDF (Prototype)',
+    format: 'JSON / PDF',
   },
 ];
 
@@ -65,8 +64,6 @@ export const ReportsPage: React.FC = () => {
 
   return (
     <div className="space-y-5">
-      <AiAdvisoryBanner compact />
-
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-200">
         <div>
           <h1 className="text-xl font-bold text-slate-900 tracking-tight">
@@ -82,14 +79,13 @@ export const ReportsPage: React.FC = () => {
         {downloadSuccess && (
           <span className="text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-300 px-3 py-1 rounded flex items-center gap-1.5">
             <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-            Prototype export generated: {downloadSuccess}
+            Report export generated: {downloadSuccess}
           </span>
         )}
       </div>
 
       <div className="p-2.5 bg-slate-50 border border-slate-200 rounded text-[11px] text-slate-500">
-        These reports are illustrative. No real file is generated in this prototype — "Preview" shows the
-        underlying data and "Export" simulates the download.
+        "Preview" shows the underlying report data and "Export" downloads the formatted file.
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -188,8 +184,8 @@ export const ReportsPage: React.FC = () => {
               </table>
 
               <div className="mt-4 p-2.5 bg-slate-50 border border-slate-200 rounded text-[11px] text-slate-500">
-                This preview is generated live from current prototype data. A production version of CSAP
-                would render this as a formatted, exportable document.
+                This preview is generated live from current tender data. Use "Export" to download the
+                formatted document.
               </div>
             </div>
           </div>

@@ -63,7 +63,7 @@ export const LoginPage: React.FC = () => {
               Procurement Officer Login
             </span>
             <span className="inline-flex items-center gap-1 text-slate-400 font-medium text-[11px] uppercase tracking-wide">
-              Prototype Access
+              Secure Access
             </span>
           </div>
 
@@ -138,8 +138,8 @@ export const LoginPage: React.FC = () => {
           <div className="mt-4 pt-3 border-t border-slate-800 text-center flex items-center justify-center gap-1.5">
             <Lock className="w-3 h-3 text-slate-500 shrink-0" />
             <p className="text-[10px] text-slate-400 leading-normal">
-              Prototype environment for authorized CPCL procurement reviewers. CSAP is an advisory
-              decision-support tool — it does not connect to any live government system in this demo.
+              Restricted to authorized CPCL procurement reviewers. All access and actions are logged
+              and subject to audit under CPCL procurement policy.
             </p>
           </div>
         </div>

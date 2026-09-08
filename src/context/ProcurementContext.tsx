@@ -226,7 +226,9 @@ export const ProcurementProvider: React.FC<{ children: ReactNode }> = ({ childre
           (step === 3 && targetBidId === 'BID-002') ||
           ((step === 2 || step === 4) && targetBidId === 'BID-003');
         const nextSteps = prev.steps.map((s, idx) => {
-          if (idx < step) return { ...s, status: 'completed' as const };
+          // A step already marked 'flagged' by an earlier iteration must stay flagged —
+          // don't let this iteration's blanket "everything before `step` is completed" pass overwrite it.
+          if (idx < step) return { ...s, status: s.status === 'flagged' ? s.status : ('completed' as const) };
           if (idx === step) return { ...s, status: isFlagged ? ('flagged' as const) : ('completed' as const) };
           if (idx === step + 1) return { ...s, status: 'in-progress' as const };
           return s;

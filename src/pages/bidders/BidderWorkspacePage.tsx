@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   ArrowLeft,
@@ -17,12 +17,14 @@ import {
   Building,
   UserCheck,
   Clock3,
+  ShieldCheck,
+  Loader2,
+  X,
 } from 'lucide-react';
 import { useProcurement } from '../../context/ProcurementContext';
 import { StatusBadge } from '../../components/ui/StatusBadge';
 import { RiskBadge } from '../../components/ui/RiskBadge';
-import { AiAdvisoryBanner } from '../../components/ui/AiAdvisoryBanner';
-import type { OfficerDecisionType, VerificationStatus } from '../../types';
+import type { BidderDocument, OfficerDecisionType, VerificationStatus } from '../../types';
 import { findBidById, toTenderSlug } from '../../types';
 
 /** Renders a single verification-summary pill, driven entirely by the bid's actual data. */
@@ -93,6 +95,13 @@ export const BidderWorkspacePage: React.FC = () => {
   const [justificationReason, setJustificationReason] = useState('');
   const [decisionSubmitted, setDecisionSubmitted] = useState(false);
 
+  // Document Viewer State
+  const [viewingDocument, setViewingDocument] = useState<BidderDocument | null>(null);
+
+  // Verification Complete Summary — shown briefly once the pipeline finishes a run
+  const [completionSummary, setCompletionSummary] = useState<{ verified: number; flagged: number } | null>(null);
+  const wasRunningRef = useRef(false);
+
   const targetId = bidId || bidderId;
   const currentBidder = findBidById(bids, targetId) || bids[0];
   const associatedTender = tenders.find((t) => t.id === currentBidder.tenderId) || activeTender;
@@ -138,7 +147,22 @@ export const BidderWorkspacePage: React.FC = () => {
     navigate(`/bids/${currentBidder.id}/${newTab}`);
   };
 
+  // Detect the isRunning -> !isRunning edge to surface a clear "run finished" summary,
+  // instead of the progress panel silently vanishing.
+  useEffect(() => {
+    const wasRunning = wasRunningRef.current;
+    wasRunningRef.current = verificationProgress.isRunning;
+    if (wasRunning && !verificationProgress.isRunning) {
+      const verified = verificationProgress.steps.filter((s) => s.status === 'completed').length;
+      const flagged = verificationProgress.steps.filter((s) => s.status === 'flagged').length;
+      setCompletionSummary({ verified, flagged });
+      const dismissTimer = window.setTimeout(() => setCompletionSummary(null), 8000);
+      return () => window.clearTimeout(dismissTimer);
+    }
+  }, [verificationProgress.isRunning, verificationProgress.steps]);
+
   const handleRunAiVerification = () => {
+    setCompletionSummary(null);
     startAiVerification(currentBidder.id);
   };
 
@@ -261,45 +285,95 @@ export const BidderWorkspacePage: React.FC = () => {
           </div>
         </div>
 
-        {/* Verification Progress Bar (when running) */}
+        {/* Verification Progress: minimal government-portal scanning panel (while running) */}
         {verificationProgress.isRunning && (
-          <div className="mt-4 p-3 bg-indigo-950 text-white rounded border border-indigo-800 text-xs">
-            <div className="flex items-center justify-between mb-2">
-              <span className="font-semibold flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-indigo-400 animate-ping"></span>
-                AI Verification Pipeline In-Progress
-              </span>
-              <span className="font-mono text-[11px] text-indigo-300">
-                Step {verificationProgress.currentStep} of {verificationProgress.steps.length}
+          <div className="mt-4 bg-white border border-slate-200 rounded overflow-hidden">
+            <div className="flex items-center justify-between px-3.5 py-2.5 border-b border-slate-100 bg-slate-50">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="w-4 h-4 text-slate-400 shrink-0" />
+                <span className="text-xs font-semibold text-slate-700">
+                  Connecting to Government Verification Portals
+                </span>
+              </div>
+              <span className="font-mono text-[11px] text-slate-400">
+                {verificationProgress.currentStep} / {verificationProgress.steps.length}
               </span>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
+
+            <div className="h-1 bg-slate-100">
+              <div
+                className="h-full bg-blue-600 transition-all duration-500 ease-out"
+                style={{
+                  width: `${(verificationProgress.currentStep / verificationProgress.steps.length) * 100}%`,
+                }}
+              />
+            </div>
+
+            <div className="divide-y divide-slate-100">
               {verificationProgress.steps.map((step) => (
-                <div
-                  key={step.name}
-                  className={`p-2 rounded text-[11px] border ${
-                    step.status === 'completed'
-                      ? 'bg-emerald-900/60 border-emerald-700 text-emerald-200'
-                      : step.status === 'flagged'
-                      ? 'bg-rose-900/60 border-rose-700 text-rose-200'
-                      : step.status === 'in-progress'
-                      ? 'bg-indigo-800 border-indigo-500 text-white font-semibold'
-                      : 'bg-slate-900/40 border-slate-800 text-slate-500'
-                  }`}
-                >
-                  <div className="truncate">{step.name}</div>
-                  <div className="text-[10px] uppercase font-bold mt-1">
-                    {step.status === 'completed'
-                      ? '✓ OK'
-                      : step.status === 'flagged'
-                      ? '⚠ Flagged'
-                      : step.status === 'in-progress'
-                      ? 'Active...'
-                      : 'Queued'}
+                <div key={step.name} className="flex items-center justify-between px-3.5 py-2 text-xs">
+                  <div className="flex items-center gap-2.5">
+                    {step.status === 'completed' && (
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                    )}
+                    {step.status === 'flagged' && (
+                      <AlertTriangle className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                    )}
+                    {step.status === 'in-progress' && (
+                      <Loader2 className="w-3.5 h-3.5 text-blue-600 shrink-0 animate-spin" />
+                    )}
+                    {step.status === 'pending' && (
+                      <span className="w-3.5 h-3.5 rounded-full border-2 border-slate-200 shrink-0" />
+                    )}
+                    <span className={step.status === 'pending' ? 'text-slate-400' : 'text-slate-700 font-medium'}>
+                      {step.name}
+                    </span>
                   </div>
+                  <span
+                    className={`font-mono text-[10px] uppercase font-semibold tracking-wide ${
+                      step.status === 'completed'
+                        ? 'text-emerald-600'
+                        : step.status === 'flagged'
+                        ? 'text-amber-600'
+                        : step.status === 'in-progress'
+                        ? 'text-blue-600'
+                        : 'text-slate-300'
+                    }`}
+                  >
+                    {step.status === 'completed'
+                      ? 'Verified'
+                      : step.status === 'flagged'
+                      ? 'Flagged'
+                      : step.status === 'in-progress'
+                      ? 'Scanning...'
+                      : 'Queued'}
+                  </span>
                 </div>
               ))}
             </div>
+          </div>
+        )}
+
+        {/* Verification Complete Summary — replaces the panel once a run finishes */}
+        {!verificationProgress.isRunning && completionSummary && (
+          <div className="mt-4 flex items-center justify-between gap-3 px-3.5 py-2.5 bg-emerald-50 border border-emerald-200 rounded text-xs">
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              <span className="font-semibold text-emerald-900">
+                Verification complete — {completionSummary.verified} of {completionSummary.verified + completionSummary.flagged} checks passed
+                {completionSummary.flagged > 0 && (
+                  <span className="text-amber-700"> · {completionSummary.flagged} flagged for review</span>
+                )}
+                .
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setCompletionSummary(null)}
+              className="text-emerald-700 hover:underline font-semibold shrink-0"
+            >
+              Dismiss
+            </button>
           </div>
         )}
 
@@ -431,9 +505,6 @@ export const BidderWorkspacePage: React.FC = () => {
           </button>
         </div>
       </div>
-
-      {/* Statutory Banner */}
-      <AiAdvisoryBanner compact />
 
       {/* TAB 1: OVERVIEW */}
       {activeTab === 'overview' && (
@@ -608,16 +679,29 @@ export const BidderWorkspacePage: React.FC = () => {
                     </div>
                   </div>
 
-                  {doc.hasDiscrepancy && (
+                  <div className="flex items-center gap-2 self-start sm:self-center">
                     <button
                       type="button"
-                      onClick={() => handleTabChange('evidence')}
-                      className="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 rounded text-xs font-semibold flex items-center gap-1 self-start sm:self-center"
+                      onClick={() => setViewingDocument(doc)}
+                      title="View document"
+                      aria-label={`View ${doc.name}`}
+                      className="px-2.5 py-1 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 rounded text-xs font-semibold flex items-center gap-1"
                     >
-                      <Eye className="w-3.5 h-3.5 text-amber-600" />
-                      <span>Inspect Discrepancy Evidence</span>
+                      <Eye className="w-3.5 h-3.5 text-slate-500" />
+                      <span>View</span>
                     </button>
-                  )}
+
+                    {doc.hasDiscrepancy && (
+                      <button
+                        type="button"
+                        onClick={() => handleTabChange('evidence')}
+                        className="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 rounded text-xs font-semibold flex items-center gap-1"
+                      >
+                        <AlertTriangle className="w-3.5 h-3.5 text-amber-600" />
+                        <span>Inspect Discrepancy Evidence</span>
+                      </button>
+                    )}
+                  </div>
                 </div>
 
                 {/* OCR snippet box */}
@@ -977,6 +1061,85 @@ export const BidderWorkspacePage: React.FC = () => {
         </div>
       )}
 
+      {/* DOCUMENT VIEWER MODAL */}
+      {viewingDocument && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4">
+          <div className="bg-white border border-slate-300 rounded-lg max-w-2xl w-full max-h-[85vh] overflow-y-auto shadow-2xl">
+            <div className="flex items-center justify-between p-4 border-b border-slate-200 sticky top-0 bg-white">
+              <div className="flex items-center gap-2 min-w-0">
+                <FileText className="w-4 h-4 text-slate-400 shrink-0" />
+                <div className="min-w-0">
+                  <h3 className="text-sm font-bold text-slate-900 truncate">{viewingDocument.name}</h3>
+                  <div className="text-[11px] font-mono text-slate-400 truncate">
+                    {viewingDocument.fileName} • {viewingDocument.fileSize}
+                  </div>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setViewingDocument(null)}
+                aria-label="Close document viewer"
+                className="text-slate-400 hover:text-slate-700 p-1 shrink-0"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="p-4 text-xs space-y-4">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div className="p-2.5 bg-slate-50 rounded border border-slate-200">
+                  <div className="text-[10px] text-slate-400 font-semibold uppercase">Verification</div>
+                  <div className="mt-1">
+                    <StatusBadge status={viewingDocument.verificationStatus} size="sm" />
+                  </div>
+                </div>
+                <div className="p-2.5 bg-slate-50 rounded border border-slate-200">
+                  <div className="text-[10px] text-slate-400 font-semibold uppercase">OCR Status</div>
+                  <div className="mt-1 font-semibold text-slate-800">{viewingDocument.ocrStatus}</div>
+                </div>
+                <div className="p-2.5 bg-slate-50 rounded border border-slate-200">
+                  <div className="text-[10px] text-slate-400 font-semibold uppercase">Uploaded</div>
+                  <div className="mt-1 font-semibold text-slate-800 truncate">{viewingDocument.uploadTimestamp}</div>
+                </div>
+                <div className="p-2.5 bg-slate-50 rounded border border-slate-200">
+                  <div className="text-[10px] text-slate-400 font-semibold uppercase">Clause Ref.</div>
+                  <div className="mt-1 font-semibold text-slate-800 truncate">
+                    {viewingDocument.tenderClauseReference || '—'}
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <div className="text-[11px] uppercase font-bold text-slate-500 mb-1">
+                  OCR Extraction Snippet
+                </div>
+                <p className="font-mono text-slate-800 text-[11px] bg-slate-50 p-3 rounded border border-slate-200 whitespace-pre-wrap">
+                  {viewingDocument.extractedSnippet || 'No extracted text available for this document.'}
+                </p>
+              </div>
+
+              <div className="p-3 bg-slate-50 rounded border border-slate-200 text-slate-600">
+                {viewingDocument.statusMessage}
+              </div>
+
+              {viewingDocument.hasDiscrepancy && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setViewingDocument(null);
+                    handleTabChange('evidence');
+                  }}
+                  className="w-full px-3 py-2 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 rounded font-semibold flex items-center justify-center gap-1.5"
+                >
+                  <AlertTriangle className="w-3.5 h-3.5" />
+                  <span>Inspect Discrepancy Evidence</span>
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* OFFICER DECISION MODAL */}
       {decisionModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4">
@@ -999,9 +1162,8 @@ export const BidderWorkspacePage: React.FC = () => {
             </div>
 
             <div className="bg-amber-50 border border-amber-200 p-3 rounded text-xs text-amber-900">
-              <strong>Human-in-the-Loop:</strong> The determination and reason below are pre-filled from the AI
-              recommendation as a starting point — review and edit them before confirming. The AI's assessment
-              is advisory only; you hold final decision authority.
+              <strong>Note:</strong> The determination and reason below are pre-filled from the recommended
+              action as a starting point — review and edit them before confirming.
             </div>
 
             <form onSubmit={handleConfirmDecision} className="space-y-4 text-xs">

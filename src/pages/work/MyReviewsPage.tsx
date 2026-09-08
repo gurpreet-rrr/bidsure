@@ -4,7 +4,6 @@ import { ArrowRight } from 'lucide-react';
 import { useProcurement } from '../../context/ProcurementContext';
 import { StatusBadge } from '../../components/ui/StatusBadge';
 import { RiskBadge } from '../../components/ui/RiskBadge';
-import { AiAdvisoryBanner } from '../../components/ui/AiAdvisoryBanner';
 
 export const MyReviewsPage: React.FC = () => {
   const navigate = useNavigate();
@@ -18,8 +17,6 @@ export const MyReviewsPage: React.FC = () => {
 
   return (
     <div className="space-y-5">
-      <AiAdvisoryBanner compact />
-
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-200">
         <div>
           <h1 className="text-xl font-bold text-slate-900 tracking-tight">

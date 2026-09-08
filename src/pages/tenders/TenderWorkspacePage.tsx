@@ -16,7 +16,6 @@ import {
 import { useProcurement } from '../../context/ProcurementContext';
 import { StatusBadge } from '../../components/ui/StatusBadge';
 import { RiskBadge } from '../../components/ui/RiskBadge';
-import { AiAdvisoryBanner } from '../../components/ui/AiAdvisoryBanner';
 import { findTenderByIdOrSlug, toTenderSlug } from '../../types';
 
 export const TenderWorkspacePage: React.FC = () => {
@@ -191,9 +190,6 @@ export const TenderWorkspacePage: React.FC = () => {
           </button>
         </div>
       </div>
-
-      {/* Advisory Banner */}
-      <AiAdvisoryBanner compact />
 
       {/* TAB 1: OVERVIEW */}
       {activeTab === 'overview' && (
@@ -370,7 +366,7 @@ export const TenderWorkspacePage: React.FC = () => {
             <div className="text-center py-10 text-xs text-slate-500">
               <p className="font-semibold text-slate-700">Requirements not yet configured for this tender.</p>
               <p className="text-slate-400 mt-1">
-                This prototype dataset only includes full clause-level requirements for GEM/2026/CPCL/001.
+                Clause-level requirements have not been configured for this tender yet.
               </p>
             </div>
           ) : (
@@ -500,7 +496,7 @@ export const TenderWorkspacePage: React.FC = () => {
               <div className="text-center py-10 text-xs text-slate-500">
                 <p className="font-semibold text-slate-700">No bids submitted for this tender yet.</p>
                 <p className="text-slate-400 mt-1">
-                  This prototype dataset includes submitted bids only for GEM/2026/CPCL/001.
+                  Bidder submissions will appear here once received for this tender.
                 </p>
               </div>
             ) : filteredBidders.length === 0 ? (
@@ -635,7 +631,7 @@ export const TenderWorkspacePage: React.FC = () => {
 
             {tenderBidders.length === 0 ? (
               <p className="text-xs text-slate-400 italic pl-5">
-                No bid activity recorded yet for this tender in the prototype dataset.
+                No bid activity recorded yet for this tender.
               </p>
             ) : (
               tenderBidders

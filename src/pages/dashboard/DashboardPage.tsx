@@ -16,7 +16,6 @@ import { useProcurement } from '../../context/ProcurementContext';
 import { MetricCard } from '../../components/ui/MetricCard';
 import { StatusBadge } from '../../components/ui/StatusBadge';
 import { RiskBadge } from '../../components/ui/RiskBadge';
-import { AiAdvisoryBanner } from '../../components/ui/AiAdvisoryBanner';
 import { toTenderSlug, type Bid } from '../../types';
 import { getActiveAlerts } from '../../utils/alerts';
 
@@ -69,9 +68,6 @@ export const DashboardPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Top Banner: Advisory notice */}
-      <AiAdvisoryBanner compact />
-
       {/* Page Title & Context Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-200">
         <div>

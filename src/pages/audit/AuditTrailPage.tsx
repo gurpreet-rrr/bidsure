@@ -12,7 +12,6 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 import { useProcurement } from '../../context/ProcurementContext';
-import { AiAdvisoryBanner } from '../../components/ui/AiAdvisoryBanner';
 import type { AuditEvent } from '../../types';
 
 export const AuditTrailPage: React.FC = () => {
@@ -74,8 +73,6 @@ export const AuditTrailPage: React.FC = () => {
 
   return (
     <div className="space-y-5">
-      <AiAdvisoryBanner compact />
-
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-200">
         <div>
@@ -94,7 +91,7 @@ export const AuditTrailPage: React.FC = () => {
           {exported && (
             <span className="text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-300 px-3 py-1 rounded flex items-center gap-1.5">
               <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-              Audit log export generated (prototype)
+              Audit log export generated
             </span>
           )}
           <button

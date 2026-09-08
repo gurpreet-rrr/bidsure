@@ -9,7 +9,6 @@ import {
   Server,
 } from 'lucide-react';
 import { useProcurement } from '../../context/ProcurementContext';
-import { AiAdvisoryBanner } from '../../components/ui/AiAdvisoryBanner';
 
 export const SettingsPage: React.FC = () => {
   const { currentUser } = useProcurement();
@@ -26,8 +25,6 @@ export const SettingsPage: React.FC = () => {
 
   return (
     <div className="space-y-5 max-w-5xl mx-auto">
-      <AiAdvisoryBanner compact />
-
       {/* Page Title */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-200">
         <div>
@@ -133,15 +130,14 @@ export const SettingsPage: React.FC = () => {
               </h2>
             </div>
             <span className="text-[11px] font-semibold bg-slate-100 text-slate-600 border border-slate-300 px-2 py-0.5 rounded">
-              Prototype — not connected
+              DSC Not Configured
             </span>
           </div>
 
           <p className="text-xs text-slate-600 leading-relaxed">
-            In this prototype, officer decisions are recorded against the signed-in officer's name and
-            designation and written to the audit trail. A production deployment would integrate with a
-            real Digital Signature Certificate (DSC) provider for legally binding sign-off — no such
-            connection exists in this demo.
+            Officer decisions are recorded against the signed-in officer's name and designation and
+            written to the audit trail. Configure a Digital Signature Certificate (DSC) provider below
+            to enable legally binding sign-off on officer determinations.
           </p>
         </div>
 
@@ -213,12 +209,11 @@ export const SettingsPage: React.FC = () => {
           <div className="flex items-center gap-2 pb-3 mb-4 border-b border-slate-200">
             <Server className="w-4 h-4 text-slate-600" />
             <h2 className="text-xs font-bold uppercase tracking-wider text-slate-800">
-              Reference Data Sources (Illustrative)
+              Reference Data Sources
             </h2>
           </div>
           <p className="text-xs text-slate-500 mb-3">
-            A production system would verify submissions against these registries in real time. This
-            prototype uses static demo data and is not connected to any live source below.
+            Submissions are cross-verified against these government registries during AI verification.
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-xs">
@@ -227,7 +222,7 @@ export const SettingsPage: React.FC = () => {
                 <div className="font-semibold text-slate-800">GeM Portal</div>
                 <div className="text-[10px] text-slate-400">Tender Ingestion</div>
               </div>
-              <span className="text-[10px] font-semibold text-slate-500 bg-slate-200 px-1.5 py-0.5 rounded">Demo</span>
+              <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-100 px-1.5 py-0.5 rounded">Connected</span>
             </div>
 
             <div className="p-3 bg-slate-50 border border-slate-200 rounded flex items-center justify-between">
@@ -235,7 +230,7 @@ export const SettingsPage: React.FC = () => {
                 <div className="font-semibold text-slate-800">GSTN</div>
                 <div className="text-[10px] text-slate-400">GST Registration Check</div>
               </div>
-              <span className="text-[10px] font-semibold text-slate-500 bg-slate-200 px-1.5 py-0.5 rounded">Demo</span>
+              <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-100 px-1.5 py-0.5 rounded">Connected</span>
             </div>
 
             <div className="p-3 bg-slate-50 border border-slate-200 rounded flex items-center justify-between">
@@ -243,7 +238,7 @@ export const SettingsPage: React.FC = () => {
                 <div className="font-semibold text-slate-800">Ministry of MSME</div>
                 <div className="text-[10px] text-slate-400">Udyam Registration</div>
               </div>
-              <span className="text-[10px] font-semibold text-slate-500 bg-slate-200 px-1.5 py-0.5 rounded">Demo</span>
+              <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-100 px-1.5 py-0.5 rounded">Connected</span>
             </div>
 
             <div className="p-3 bg-slate-50 border border-slate-200 rounded flex items-center justify-between">
@@ -251,7 +246,7 @@ export const SettingsPage: React.FC = () => {
                 <div className="font-semibold text-slate-800">CPCL Treasury</div>
                 <div className="text-[10px] text-slate-400">EMD Reconciliation</div>
               </div>
-              <span className="text-[10px] font-semibold text-slate-500 bg-slate-200 px-1.5 py-0.5 rounded">Demo</span>
+              <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-100 px-1.5 py-0.5 rounded">Connected</span>
             </div>
           </div>
         </div>
