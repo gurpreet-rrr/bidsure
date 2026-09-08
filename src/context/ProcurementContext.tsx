@@ -42,10 +42,11 @@ interface ProcurementContextType {
    *  guards must wait for this before redirecting, or a hard reload of a deep link
    *  races the async session check and always bounces to /login then /dashboard. */
   authChecked: boolean;
-  /** True once tenders/bids have been fetched at least once after login. Every page
-   *  under AppLayout assumes activeTender/activeBid are already populated (that was
-   *  always true with synchronous mock data) — gate rendering on this to avoid a
-   *  crash on a hard reload of a deep link, before the first fetch resolves. */
+  /** True once tenders/bids have been fetched at least once after login. Pages that list
+   *  across all tenders/bids (dashboard, tender/bid lists) gate rendering on this to avoid
+   *  a crash on a hard reload of a deep link, before the first fetch resolves. Note that
+   *  activeTender/activeBid are NOT auto-populated on load — the officer must explicitly
+   *  select a tender or bid; see selectTender/selectBid. */
   dataLoaded: boolean;
   logout: () => void;
 }
@@ -106,8 +107,8 @@ export const ProcurementProvider: React.FC<{ children: ReactNode }> = ({ childre
     const [tenderList, bidList] = await Promise.all([fetchTenders(), fetchBids()]);
     setTenders(tenderList);
     setBids(bidList);
-    if (tenderList.length && !activeTenderId) setActiveTenderId(tenderList[0].id);
-    if (bidList.length && !activeBidId) _setActiveBidId(bidList[0].id);
+    // Deliberately no auto-selection here: the officer must explicitly pick a tender/bid
+    // (from the Dashboard, Tenders list, or search) rather than landing on one by default.
     setDataLoaded(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -134,8 +135,10 @@ export const ProcurementProvider: React.FC<{ children: ReactNode }> = ({ childre
     reloadData().catch((err) => console.error('reloadData failed:', err));
   }, [isAuthenticated, userId, reloadData]);
 
-  const activeTender = findTenderByIdOrSlug(tenders, activeTenderId) || tenders[0];
-  const activeBid = findBidById(bids, activeBidId) || bids[0];
+  // No fallback to tenders[0]/bids[0]: until the officer explicitly selects a case,
+  // there is no active tender or bid.
+  const activeTender = activeTenderId ? findTenderByIdOrSlug(tenders, activeTenderId) : undefined;
+  const activeBid = activeBidId ? findBidById(bids, activeBidId) : undefined;
   const activeBidder = activeBid;
 
   const setActiveBidId = (id: string) => {

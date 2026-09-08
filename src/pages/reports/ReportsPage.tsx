@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Download, CheckCircle2, Eye, X } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Download, CheckCircle2, Eye, X, FileStack, ArrowRight } from 'lucide-react';
 import { useProcurement } from '../../context/ProcurementContext';
 import { StatusBadge } from '../../components/ui/StatusBadge';
 import { RiskBadge } from '../../components/ui/RiskBadge';
@@ -51,6 +52,7 @@ const reports: ReportDefinition[] = [
 ];
 
 export const ReportsPage: React.FC = () => {
+  const navigate = useNavigate();
   const { activeTender, bids } = useProcurement();
   const [downloadSuccess, setDownloadSuccess] = useState<string | null>(null);
   const [previewReport, setPreviewReport] = useState<ReportDefinition | null>(null);
@@ -62,6 +64,31 @@ export const ReportsPage: React.FC = () => {
     window.setTimeout(() => setDownloadSuccess(null), 3000);
   };
 
+  if (!activeTender) {
+    return (
+      <div className="space-y-5">
+        <div className="pb-2 border-b border-slate-200">
+          <h1 className="text-xl font-bold text-slate-900 tracking-tight">Procurement Reports</h1>
+          <p className="text-xs text-slate-500 mt-0.5">Report exports for the active tender case</p>
+        </div>
+
+        <div className="bg-white border border-slate-200 rounded-md p-10 text-center">
+          <FileStack className="w-8 h-8 text-slate-300 mx-auto mb-3" />
+          <p className="text-sm font-semibold text-slate-800">No tender case selected.</p>
+          <p className="text-xs text-slate-500 mt-1">Select a tender to generate reports scoped to its bids.</p>
+          <button
+            type="button"
+            onClick={() => navigate('/tenders')}
+            className="mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded text-xs font-semibold inline-flex items-center gap-1.5 transition-colors"
+          >
+            <span>Select a Tender</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-5">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-200">
@@ -71,9 +98,7 @@ export const ReportsPage: React.FC = () => {
           </h1>
           <p className="text-xs text-slate-500 mt-0.5">
             Report exports for the active tender case
-            {activeTender && (
-              <span className="ml-2 font-mono text-blue-700 font-medium">({activeTender.id})</span>
-            )}
+            <span className="ml-2 font-mono text-blue-700 font-medium">({activeTender.id})</span>
           </p>
         </div>
         {downloadSuccess && (

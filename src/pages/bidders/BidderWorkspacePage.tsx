@@ -69,6 +69,20 @@ const verificationTileClass = (status: VerificationStatus): string => {
   return 'bg-slate-50 border-slate-200 hover:bg-slate-100/70';
 };
 
+/** Parses the "Key: Value | Key2: Value2" OCR snippet format into rows for the document preview. */
+const parseSnippetFields = (snippet?: string): { label: string; value: string }[] => {
+  if (!snippet) return [];
+  return snippet
+    .split('|')
+    .map((part) => part.trim())
+    .filter(Boolean)
+    .map((part) => {
+      const idx = part.indexOf(':');
+      if (idx === -1) return { label: '', value: part };
+      return { label: part.slice(0, idx).trim(), value: part.slice(idx + 1).trim() };
+    });
+};
+
 export const BidderWorkspacePage: React.FC = () => {
   const { bidId, bidderId, tab } = useParams<{ bidId?: string; bidderId?: string; tab?: string }>();
   const navigate = useNavigate();
@@ -1086,6 +1100,71 @@ export const BidderWorkspacePage: React.FC = () => {
             </div>
 
             <div className="p-4 text-xs space-y-4">
+              {/* Document Preview — a formatted rendering of the scanned document's extracted fields */}
+              <div>
+                <div className="text-[11px] uppercase font-bold text-slate-500 mb-1">Document Preview</div>
+                <div className="relative border border-slate-300 rounded-md bg-white p-4 pt-3 shadow-sm">
+                  <div
+                    className={`absolute top-0 left-0 right-0 h-1 rounded-t-md ${
+                      viewingDocument.verificationStatus === 'MISMATCH'
+                        ? 'bg-rose-500'
+                        : viewingDocument.verificationStatus === 'MANUAL_REVIEW'
+                        ? 'bg-amber-500'
+                        : 'bg-emerald-500'
+                    }`}
+                  />
+
+                  <div className="flex items-start justify-between gap-3 pb-2 mb-2 border-b border-dashed border-slate-200">
+                    <div>
+                      <div className="text-[13px] font-bold text-slate-900 uppercase tracking-wide">
+                        {viewingDocument.name}
+                      </div>
+                      <div className="text-[10px] text-slate-400 mt-0.5">{viewingDocument.type}</div>
+                    </div>
+                    <div
+                      className={`shrink-0 w-11 h-11 rounded-full border-2 flex items-center justify-center rotate-[-8deg] ${
+                        viewingDocument.verificationStatus === 'MISMATCH'
+                          ? 'border-rose-400 text-rose-500'
+                          : viewingDocument.verificationStatus === 'MANUAL_REVIEW'
+                          ? 'border-amber-400 text-amber-500'
+                          : 'border-emerald-400 text-emerald-500'
+                      }`}
+                      title="Verification stamp"
+                    >
+                      {viewingDocument.verificationStatus === 'MISMATCH' ? (
+                        <XCircle className="w-5 h-5" />
+                      ) : viewingDocument.verificationStatus === 'MANUAL_REVIEW' ? (
+                        <AlertTriangle className="w-5 h-5" />
+                      ) : (
+                        <ShieldCheck className="w-5 h-5" />
+                      )}
+                    </div>
+                  </div>
+
+                  {parseSnippetFields(viewingDocument.extractedSnippet).length > 0 ? (
+                    <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5">
+                      {parseSnippetFields(viewingDocument.extractedSnippet).map((field, idx) => (
+                        <div key={idx} className="text-[11px] py-0.5">
+                          <dt className="text-slate-400 uppercase text-[10px] font-semibold tracking-wide">
+                            {field.label || 'Detail'}
+                          </dt>
+                          <dd className="font-mono font-semibold text-slate-800 mt-0.5 break-words">
+                            {field.value}
+                          </dd>
+                        </div>
+                      ))}
+                    </dl>
+                  ) : (
+                    <p className="text-[11px] text-slate-400 italic">No extracted fields available for preview.</p>
+                  )}
+
+                  <div className="mt-3 pt-2 border-t border-dashed border-slate-200 flex items-center justify-between text-[10px] text-slate-400">
+                    <span>Ref: {viewingDocument.fileName}</span>
+                    <span>Scanned {viewingDocument.uploadTimestamp}</span>
+                  </div>
+                </div>
+              </div>
+
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 <div className="p-2.5 bg-slate-50 rounded border border-slate-200">
                   <div className="text-[10px] text-slate-400 font-semibold uppercase">Verification</div>
@@ -1111,7 +1190,7 @@ export const BidderWorkspacePage: React.FC = () => {
 
               <div>
                 <div className="text-[11px] uppercase font-bold text-slate-500 mb-1">
-                  OCR Extraction Snippet
+                  Raw OCR Text
                 </div>
                 <p className="font-mono text-slate-800 text-[11px] bg-slate-50 p-3 rounded border border-slate-200 whitespace-pre-wrap">
                   {viewingDocument.extractedSnippet || 'No extracted text available for this document.'}

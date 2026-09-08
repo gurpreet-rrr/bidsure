@@ -18,7 +18,9 @@ export const AiAssistantPage: React.FC = () => {
     {
       id: 'MSG-1',
       sender: 'assistant',
-      text: 'Good day, Officer Ramanathan. I am your CSAP Procurement Assistant. I can answer inquiries regarding tender eligibility benchmarks, bidder discrepancy findings, EMD reconciliation data, and clause-level compliance scores based on your active tender case (GEM/2026/CPCL/001). How may I assist your scrutiny today?',
+      text: activeTender
+        ? `Good day, Officer Ramanathan. I am your CSAP Procurement Assistant. I can answer inquiries regarding tender eligibility benchmarks, bidder discrepancy findings, EMD reconciliation data, and clause-level compliance scores based on your active tender case (${activeTender.id}). How may I assist your scrutiny today?`
+        : 'Good day, Officer Ramanathan. I am your CSAP Procurement Assistant. Select an active tender case from the Tenders workspace and I can answer inquiries regarding its eligibility benchmarks, bidder discrepancy findings, EMD reconciliation data, and clause-level compliance scores. How may I assist your scrutiny today?',
       timestamp: '10:00 AM',
     },
   ]);
@@ -91,9 +93,15 @@ export const AiAssistantPage: React.FC = () => {
               </span>
             </div>
           </div>
-          <span className="text-xs bg-slate-100 text-slate-600 px-2.5 py-1 rounded font-mono border border-slate-200">
-            Case: GEM/2026/CPCL/001
-          </span>
+          {activeTender ? (
+            <span className="text-xs bg-slate-100 text-slate-600 px-2.5 py-1 rounded font-mono border border-slate-200">
+              Case: {activeTender.id}
+            </span>
+          ) : (
+            <span className="text-xs bg-amber-50 text-amber-800 px-2.5 py-1 rounded font-semibold border border-amber-200">
+              No Case Selected
+            </span>
+          )}
         </div>
 
         <div className="mt-3 p-2 bg-indigo-50/70 border border-indigo-200 rounded text-[11px] text-indigo-950 flex items-center gap-2">

@@ -102,7 +102,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ onToggleSidebar }) => {
           <Menu className="w-5 h-5" />
         </button>
 
-        {activeTender && (
+        {activeTender ? (
           <div
             onClick={handleOpenActiveTender}
             className="hidden md:flex items-center gap-2 text-xs cursor-pointer hover:opacity-80 transition-opacity"
@@ -114,6 +114,16 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ onToggleSidebar }) => {
             </span>
             <span className="text-slate-500 truncate max-w-xs">{activeTender.title}</span>
           </div>
+        ) : (
+          <button
+            type="button"
+            onClick={() => navigate('/tenders')}
+            className="hidden md:flex items-center gap-2 text-xs"
+            title="Select a tender case"
+          >
+            <span className="text-slate-400 font-medium">No tender case selected</span>
+            <span className="font-semibold text-blue-700 hover:underline">Select a Case</span>
+          </button>
         )}
       </div>
 

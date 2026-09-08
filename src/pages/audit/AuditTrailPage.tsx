@@ -15,7 +15,7 @@ import { useProcurement } from '../../context/ProcurementContext';
 import type { AuditEvent } from '../../types';
 
 export const AuditTrailPage: React.FC = () => {
-  const { bidders, bids, tenders, activeTender } = useProcurement();
+  const { bidders, bids, activeTender } = useProcurement();
   const [searchParams, setSearchParams] = useSearchParams();
   const paramBidId = searchParams.get('bidId') || searchParams.get('bidderId') || 'ALL';
 
@@ -35,7 +35,7 @@ export const AuditTrailPage: React.FC = () => {
   const allLogs: (AuditEvent & { tenderId: string; bidderName: string; bidderId: string })[] = (bids || bidders).flatMap((b) =>
     (b.auditTrail || []).map((ev) => ({
       ...ev,
-      tenderId: b.tenderId || activeTender?.id || 'GEM/2026/CPCL/001',
+      tenderId: b.tenderId || activeTender?.id || 'UNASSIGNED',
       bidderName: b.companyName,
       bidderId: b.id,
       hash: ev.hash || `REF-${b.id}-${ev.id}`,
@@ -160,7 +160,7 @@ export const AuditTrailPage: React.FC = () => {
             Audit Records ({filteredLogs.length} Events)
           </span>
           <span className="text-xs text-slate-500 font-mono">
-            Active Tender: {activeTender?.id || tenders[0]?.id}
+            {activeTender ? `Active Tender: ${activeTender.id}` : 'Showing: All Tenders'}
           </span>
         </div>
 
