@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, CheckCircle2 } from 'lucide-react';
 import { useProcurement } from '../../context/ProcurementContext';
 import { StatusBadge } from '../../components/ui/StatusBadge';
 import { RiskBadge } from '../../components/ui/RiskBadge';
@@ -31,6 +31,15 @@ export const MyReviewsPage: React.FC = () => {
         </span>
       </div>
 
+      {pendingBids.length === 0 ? (
+        <div className="bg-white border border-slate-200 rounded-md p-10 text-center">
+          <CheckCircle2 className="w-8 h-8 text-emerald-500 mx-auto mb-2" />
+          <p className="text-sm font-semibold text-slate-800">No pending reviews.</p>
+          <p className="text-xs text-slate-500 mt-1">
+            Every bid has a formal officer decision recorded against it.
+          </p>
+        </div>
+      ) : (
       <div className="bg-white border border-slate-200 rounded-md shadow-2xs overflow-hidden">
         <div className="divide-y divide-slate-200">
           {pendingBids.map((bidder) => (
@@ -69,6 +78,7 @@ export const MyReviewsPage: React.FC = () => {
           ))}
         </div>
       </div>
+      )}
     </div>
   );
 };

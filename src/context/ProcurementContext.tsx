@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState, useCallback, type ReactNode } from 'react';
+import React, { createContext, useContext, useEffect, useRef, useState, useCallback, type ReactNode } from 'react';
 import type { Tender, Bid, Bidder, OfficerDecisionRecord, DashboardMetrics } from '../types';
 import { findTenderByIdOrSlug, findBidById } from '../types';
 import { supabase } from '../lib/supabaseClient';
@@ -81,6 +81,11 @@ export const ProcurementProvider: React.FC<{ children: ReactNode }> = ({ childre
     steps: initialVerificationSteps,
     completed: true,
   });
+  // Synchronous guard against duplicate runs — React state updates (and the button's
+  // `disabled` prop) are async, so a rapid double-click/double-invoke can otherwise slip
+  // through before the first render reflects isRunning:true, each one writing its own
+  // full set of ai_verification_runs / gov_portal_verification_log / audit_events rows.
+  const verificationLockRef = useRef(false);
 
   // Auth session tracking
   useEffect(() => {
@@ -165,8 +170,16 @@ export const ProcurementProvider: React.FC<{ children: ReactNode }> = ({ childre
   };
 
   const startAiVerification = async (targetBidId: string) => {
-    if (!userId) return;
+    if (!userId || verificationLockRef.current) return;
+    verificationLockRef.current = true;
+    try {
+      await runAiVerification(targetBidId);
+    } finally {
+      verificationLockRef.current = false;
+    }
+  };
 
+  const runAiVerification = async (targetBidId: string) => {
     const { data: run, error: runErr } = await supabase
       .from('ai_verification_runs')
       .insert({ bid_id: targetBidId, initiated_by: userId, status: 'RUNNING', steps: initialVerificationSteps })

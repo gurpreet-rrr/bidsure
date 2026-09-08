@@ -404,7 +404,7 @@ export const TenderWorkspacePage: React.FC = () => {
                     </td>
                     <td className="py-3 px-4 text-center">
                       {req.mandatory ? (
-                        <span className="text-[11px] font-semibold text-rose-700 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded">
+                        <span className="text-[11px] font-semibold text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded">
                           Yes
                         </span>
                       ) : (

@@ -110,10 +110,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
                 </span>
               </div>
             </NavLink>
-          </div>
-
-          {/* Analytics */}
-          <div className="space-y-1">
             <NavLink to="/reports" className={navItemClass} onClick={() => setIsOpen(false)}>
               <BarChart3 className="w-4 h-4 text-slate-400" />
               <span>Reports</span>
